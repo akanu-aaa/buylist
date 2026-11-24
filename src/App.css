@@ -32,16 +32,18 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 4px 4px;
+  gap: 8px;
 }
 
 .header-title-area {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .app-header h1 {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #d65a88;
   letter-spacing: 0.04em;
@@ -54,6 +56,54 @@ body {
   font-weight: 700;
   padding: 3px 10px;
   border-radius: 12px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-action-btn {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(214, 90, 136, 0.08);
+}
+
+.save-btn {
+  background-color: #f48fb1;
+  color: #ffffff;
+  border: none;
+}
+
+.save-btn:active {
+  background-color: #ec407a;
+}
+
+.saved-list-btn {
+  background-color: #ffffff;
+  color: #d65a88;
+  border: 1px solid #f8bbd0;
+}
+
+.saved-list-btn:active {
+  background-color: #fce4ec;
+}
+
+.header-badge {
+  background-color: #fce4ec;
+  color: #d65a88;
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border-radius: 10px;
 }
 
 .hamburger-btn {
@@ -69,6 +119,7 @@ body {
   gap: 5px;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(214, 90, 136, 0.08);
+  flex-shrink: 0;
 }
 
 .hamburger-btn:active {
@@ -248,6 +299,229 @@ body {
   background-color: #ec407a;
 }
 
+/* モーダル共通スタイル（保存 & 一覧表示） */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(74, 59, 66, 0.4);
+  z-index: 1100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  background-color: #fff9fb;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(214, 90, 136, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.saved-lists-modal {
+  max-width: 560px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #fce4ec;
+}
+
+.modal-header h2 {
+  font-size: 1.08rem;
+  color: #d65a88;
+}
+
+.modal-desc {
+  font-size: 0.88rem;
+  color: #6e5a63;
+  line-height: 1.5;
+}
+
+.save-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #d65a88;
+}
+
+.modal-input {
+  border: 1px solid #f8bbd0;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 16px;
+  color: #4a3b42;
+  outline: none;
+}
+
+.modal-input:focus {
+  border-color: #f48fb1;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.modal-cancel-btn {
+  background-color: #ffffff;
+  border: 1px solid #e0cfd5;
+  color: #7d6871;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-submit-btn {
+  background-color: #f48fb1;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 18px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-submit-btn:active {
+  background-color: #ec407a;
+}
+
+/* 保存済みリスト一覧カード */
+.saved-list-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.saved-list-card {
+  background-color: #ffffff;
+  border: 1px solid #fce4ec;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(214, 90, 136, 0.05);
+}
+
+.saved-list-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.saved-list-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #d65a88;
+  word-break: break-word;
+}
+
+.saved-list-date {
+  font-size: 0.76rem;
+  color: #9e8a92;
+}
+
+.saved-list-preview {
+  background-color: #fff5f8;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.preview-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preview-label {
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #d65a88;
+}
+
+.bought-preview .preview-label {
+  color: #9e8a92;
+}
+
+.preview-items {
+  color: #4a3b42;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.bought-preview .preview-items {
+  color: #8c7880;
+}
+
+.saved-list-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.load-append-btn {
+  background-color: #ffffff;
+  border: 1px solid #f48fb1;
+  color: #d65a88;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.load-append-btn:active {
+  background-color: #fce4ec;
+}
+
+.load-replace-btn {
+  background-color: #f48fb1;
+  border: none;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.load-replace-btn:active {
+  background-color: #ec407a;
+}
+
 .input-form {
   display: flex;
   gap: 6px;
@@ -358,6 +632,7 @@ body {
   color: #b59ca6;
   font-size: 0.9rem;
   padding: 20px 0;
+  line-height: 1.6;
 }
 
 .item-list {
