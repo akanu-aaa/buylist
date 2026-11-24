@@ -399,18 +399,13 @@ export default function App() {
                   {savedLists.map((saved) => (
                     <li
                       key={saved.id}
-                      className="select-list-card saved-list-card-purple-pink"
+                      className="select-list-card saved-list-card-purple-pink saved-list-title-only-card"
                       onClick={() => handleOpenSavedList(saved)}
                     >
-                      <div className="select-card-top">
-                        <div>
-                          <h3 className="select-card-title saved-card-title">
-                            {saved.title}
-                          </h3>
-                          <span className="select-card-date">
-                            {saved.createdAt}
-                          </span>
-                        </div>
+                      <div className="select-card-top saved-title-only-top">
+                        <h3 className="select-card-title saved-card-title">
+                          {saved.title}
+                        </h3>
                         <div className="select-card-right">
                           <button
                             type="button"
@@ -424,30 +419,6 @@ export default function App() {
                           </span>
                         </div>
                       </div>
-
-                      <div className="select-card-meta saved-card-meta">
-                        <span className="meta-chip">
-                          買うもの: {saved.toBuyItems.length}件
-                        </span>
-                        <span className="meta-divider">／</span>
-                        <span className="meta-chip">
-                          買ったもの: {saved.boughtItems.length}件
-                        </span>
-                      </div>
-
-                      {(saved.toBuyItems.length > 0 ||
-                        saved.boughtItems.length > 0) && (
-                        <p className="select-card-preview saved-card-preview">
-                          {[...saved.toBuyItems, ...saved.boughtItems]
-                            .slice(0, 6)
-                            .map((i) => i.text)
-                            .join('、')}
-                          {saved.toBuyItems.length + saved.boughtItems.length >
-                          6
-                            ? ' ...'
-                            : ''}
-                        </p>
-                      )}
                     </li>
                   ))}
                 </ul>

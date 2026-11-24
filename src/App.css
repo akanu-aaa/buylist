@@ -159,7 +159,7 @@ body {
 .saved-list-card-purple-pink {
   background-color: #ffffff;
   border: 1.5px solid #e3b8f2;
-  border-left: 5px solid #b553c9;
+  border-left: 5px solid #dfacf2;
   box-shadow: 0 4px 14px rgba(156, 60, 184, 0.09);
 }
 
@@ -202,13 +202,13 @@ body {
 .select-card-title {
   font-size: 1.06rem;
   font-weight: 700;
-  color: #3d2c42;
+  color: #725b79;
   word-break: break-word;
   line-height: 1.35;
 }
 
 .saved-card-title {
-  color: #4a2357;
+  color: #86409d;
 }
 
 .select-card-date {
@@ -229,13 +229,13 @@ body {
 .saved-delete-btn {
   background-color: #fdf6ff;
   border: 1px solid #d7b2e6;
-  color: #7a4b8a;
+  color: #81638b;
   font-weight: 600;
 }
 
 .saved-delete-btn:active {
   background-color: #f3dcfb;
-  color: #552366;
+  color: #6b4877;
 }
 
 .open-arrow {
@@ -247,7 +247,7 @@ body {
 
 .saved-open-arrow {
   background-color: #f6e1fd;
-  color: #8b28a8;
+  color: #9a60ac;
   padding: 4px 10px;
   border-radius: 10px;
 }
@@ -262,13 +262,13 @@ body {
 }
 
 .saved-card-meta {
-  color: #8e2da8;
+  color: #9652a9;
   flex-wrap: wrap;
 }
 
 .meta-chip {
   background-color: #f7e4fc;
-  color: #7d2296;
+  color: ｓ#8d6997;
   padding: 3px 9px;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -786,8 +786,8 @@ body {
 }
 
 .badge {
-  background-color: #fce4ec;
-  color: #d65a88;
+  background-color: #fce4fc;
+  color: #82397a;
   font-size: 0.8rem;
   font-weight: 600;
   padding: 2px 10px;
@@ -910,4 +910,14 @@ body {
     grid-template-columns: 1fr 1fr;
     align-items: start;
   }
+}
+
+/* 保存したリスト：タイトルのみ表示用のレイアウト調整 */
+.saved-list-title-only-card {
+  gap: 0;
+  padding: 14px 18px;
+}
+
+.saved-title-only-top {
+  align-items: center;
 }
