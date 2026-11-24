@@ -23,6 +23,15 @@ export default function App() {
   const [activeListTitle, setActiveListTitle] = useState<string>('現在のお買い物メモ');
   const [activeListId, setActiveListId] = useState<number | null>(null);
 
+  // 未保存の作成中メモがあるかどうか（一度でも保存したら false にする）
+  const [hasUnsavedDraft, setHasUnsavedDraft] = useState<boolean>(() => {
+    const savedFlag = localStorage.getItem('hasUnsavedDraft_v1');
+    if (savedFlag !== null) {
+      return JSON.parse(savedFlag);
+    }
+    return true;
+  });
+
   const [inputText, setInputText] = useState<string>('');
 
   const [categories, setCategories] = useState<string[]>(() => {
@@ -77,6 +86,10 @@ export default function App() {
     localStorage.setItem('savedShoppingLists_v1', JSON.stringify(savedLists));
   }, [savedLists]);
 
+  useEffect(() => {
+    localStorage.setItem('hasUnsavedDraft_v1', JSON.stringify(hasUnsavedDraft));
+  }, [hasUnsavedDraft]);
+
   // --- トップページからの画面遷移 ---
 
   // 1. 現在編集中のリストを開く
@@ -89,6 +102,7 @@ export default function App() {
   const handleCreateNewList = () => {
     const hasCurrentItems = toBuyList.length > 0 || boughtList.length > 0;
     if (
+      hasUnsavedDraft &&
       hasCurrentItems &&
       activeListId === null &&
       !window.confirm(
@@ -101,6 +115,7 @@ export default function App() {
     setBoughtList([]);
     setActiveListId(null);
     setActiveListTitle('新しいお買い物リスト');
+    setHasUnsavedDraft(true);
     setCurrentView('すべて');
     setScreen('editor');
   };
@@ -121,6 +136,7 @@ export default function App() {
     setBoughtList(clonedBought);
     setActiveListId(saved.id);
     setActiveListTitle(saved.title);
+    setHasUnsavedDraft(false);
     setCurrentView('すべて');
     setScreen('editor');
   };
@@ -285,6 +301,8 @@ export default function App() {
       }
     }
 
+    // 一度でも保存したら、トップページの「作成中のメモ（編集中）」を非表示にする
+    setHasUnsavedDraft(false);
     setIsSaveModalOpen(false);
   };
 
@@ -326,36 +344,38 @@ export default function App() {
               <span>新しいお買い物リストを作る</span>
             </button>
 
-            {/* 作業中のメモセクション */}
-            <section className="home-section">
-              <h2 className="home-section-title">作成中のメモ</h2>
-              <div
-                className="select-list-card current-draft-card"
-                onClick={handleOpenCurrentDraft}
-              >
-                <div className="select-card-top">
-                  <div className="select-card-title-row">
-                    <span className="status-pill draft-pill">編集中</span>
-                    <h3 className="select-card-title">{activeListTitle}</h3>
+            {/* 未保存の作成中メモがある場合のみ表示 */}
+            {hasUnsavedDraft && (
+              <section className="home-section">
+                <h2 className="home-section-title">作成中のメモ</h2>
+                <div
+                  className="select-list-card current-draft-card"
+                  onClick={handleOpenCurrentDraft}
+                >
+                  <div className="select-card-top">
+                    <div className="select-card-title-row">
+                      <span className="status-pill draft-pill">編集中</span>
+                      <h3 className="select-card-title">{activeListTitle}</h3>
+                    </div>
+                    <span className="open-arrow">開く ＞</span>
                   </div>
-                  <span className="open-arrow">開く ＞</span>
+                  <div className="select-card-meta">
+                    <span>買うもの: {toBuyList.length}件</span>
+                    <span>／</span>
+                    <span>買ったもの: {boughtList.length}件</span>
+                  </div>
+                  {toBuyList.length > 0 && (
+                    <p className="select-card-preview">
+                      {toBuyList
+                        .slice(0, 5)
+                        .map((i) => i.text)
+                        .join('、')}
+                      {toBuyList.length > 5 ? ' ...' : ''}
+                    </p>
+                  )}
                 </div>
-                <div className="select-card-meta">
-                  <span>買うもの: {toBuyList.length}件</span>
-                  <span>／</span>
-                  <span>買ったもの: {boughtList.length}件</span>
-                </div>
-                {toBuyList.length > 0 && (
-                  <p className="select-card-preview">
-                    {toBuyList
-                      .slice(0, 5)
-                      .map((i) => i.text)
-                      .join('、')}
-                    {toBuyList.length > 5 ? ' ...' : ''}
-                  </p>
-                )}
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* 保存済みリスト一覧セクション */}
             <section className="home-section">
