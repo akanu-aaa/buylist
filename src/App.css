@@ -27,46 +27,256 @@ body {
   gap: 18px;
 }
 
-.app-header {
+/* ==========================================
+   トップページ（リスト選択画面）
+   ========================================== */
+.home-header {
+  text-align: center;
+  padding: 12px 4px 4px;
+}
+
+.home-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d65a88;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.home-subtitle {
+  font-size: 0.9rem;
+  color: #8c737d;
+}
+
+.home-main {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.new-list-hero-btn {
+  width: 100%;
+  background-color: #f48fb1;
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(214, 90, 136, 0.22);
+  transition: transform 0.1s, background-color 0.15s;
+}
+
+.new-list-hero-btn:active {
+  background-color: #ec407a;
+  transform: scale(0.99);
+}
+
+.plus-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.home-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 4px;
-  gap: 8px;
+  padding: 0 4px;
 }
 
-.header-title-area {
+.home-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #d65a88;
+  padding-left: 4px;
+}
+
+.saved-select-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.select-list-card {
+  background-color: #ffffff;
+  border: 1px solid #fce4ec;
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 12px rgba(214, 90, 136, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.15s;
+}
+
+.select-list-card:active {
+  transform: scale(0.99);
+  border-color: #f48fb1;
+}
+
+.current-draft-card {
+  border: 2px solid #f8bbd0;
+  background-color: #fffafd;
+}
+
+.select-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.select-card-title-row {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.app-header h1 {
-  font-size: 1.3rem;
+.status-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.draft-pill {
+  background-color: #fce4ec;
+  color: #d65a88;
+}
+
+.select-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #4a3b42;
+  word-break: break-word;
+}
+
+.select-card-date {
+  font-size: 0.78rem;
+  color: #9e8a92;
+}
+
+.select-card-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.open-arrow {
+  font-size: 0.84rem;
   font-weight: 700;
   color: #d65a88;
-  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.select-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #d65a88;
+}
+
+.select-card-preview {
+  font-size: 0.84rem;
+  color: #7d6871;
+  background-color: #fff5f8;
+  padding: 8px 12px;
+  border-radius: 10px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* ==========================================
+   お買い物メモ編集画面ヘッダー
+   ========================================== */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 2px;
+  gap: 8px;
+}
+
+.header-left-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.back-home-btn {
+  background-color: #ffffff;
+  border: 1px solid #f8bbd0;
+  color: #d65a88;
+  height: 40px;
+  padding: 0 11px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(214, 90, 136, 0.06);
+}
+
+.back-home-btn:active {
+  background-color: #fce4ec;
+}
+
+.header-title-area {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.app-header h1 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #d65a88;
+  letter-spacing: 0.02em;
+  word-break: break-word;
 }
 
 .current-view-tag {
   background-color: #f48fb1;
   color: #ffffff;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 700;
-  padding: 3px 10px;
+  padding: 2px 9px;
   border-radius: 12px;
+  white-space: nowrap;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .header-action-btn {
-  height: 42px;
-  padding: 0 12px;
+  height: 40px;
+  padding: 0 13px;
   border-radius: 12px;
   font-size: 0.84rem;
   font-weight: 700;
@@ -88,30 +298,12 @@ body {
   background-color: #ec407a;
 }
 
-.saved-list-btn {
-  background-color: #ffffff;
-  color: #d65a88;
-  border: 1px solid #f8bbd0;
-}
-
-.saved-list-btn:active {
-  background-color: #fce4ec;
-}
-
-.header-badge {
-  background-color: #fce4ec;
-  color: #d65a88;
-  font-size: 0.72rem;
-  padding: 1px 6px;
-  border-radius: 10px;
-}
-
 .hamburger-btn {
   background-color: #ffffff;
   border: 1px solid #fce4ec;
   border-radius: 12px;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -127,12 +319,15 @@ body {
 }
 
 .hamburger-line {
-  width: 20px;
+  width: 19px;
   height: 2px;
   background-color: #d65a88;
   border-radius: 2px;
 }
 
+/* ==========================================
+   ドロワーメニュー（お店切り替え）
+   ========================================== */
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -299,7 +494,9 @@ body {
   background-color: #ec407a;
 }
 
-/* モーダル共通スタイル（保存 & 一覧表示） */
+/* ==========================================
+   保存モーダル
+   ========================================== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -326,10 +523,6 @@ body {
   flex-direction: column;
   gap: 14px;
   overflow-y: auto;
-}
-
-.saved-lists-modal {
-  max-width: 560px;
 }
 
 .modal-header {
@@ -410,118 +603,9 @@ body {
   background-color: #ec407a;
 }
 
-/* 保存済みリスト一覧カード */
-.saved-list-items {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-}
-
-.saved-list-card {
-  background-color: #ffffff;
-  border: 1px solid #fce4ec;
-  border-radius: 14px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 2px 8px rgba(214, 90, 136, 0.05);
-}
-
-.saved-list-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.saved-list-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #d65a88;
-  word-break: break-word;
-}
-
-.saved-list-date {
-  font-size: 0.76rem;
-  color: #9e8a92;
-}
-
-.saved-list-preview {
-  background-color: #fff5f8;
-  border-radius: 10px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 0.85rem;
-}
-
-.preview-group {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.preview-label {
-  font-weight: 700;
-  font-size: 0.78rem;
-  color: #d65a88;
-}
-
-.bought-preview .preview-label {
-  color: #9e8a92;
-}
-
-.preview-items {
-  color: #4a3b42;
-  word-break: break-word;
-  line-height: 1.4;
-}
-
-.bought-preview .preview-items {
-  color: #8c7880;
-}
-
-.saved-list-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-
-.load-append-btn {
-  background-color: #ffffff;
-  border: 1px solid #f48fb1;
-  color: #d65a88;
-  border-radius: 10px;
-  padding: 7px 12px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.load-append-btn:active {
-  background-color: #fce4ec;
-}
-
-.load-replace-btn {
-  background-color: #f48fb1;
-  border: none;
-  color: #ffffff;
-  border-radius: 10px;
-  padding: 7px 14px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.load-replace-btn:active {
-  background-color: #ec407a;
-}
-
+/* ==========================================
+   入力フォーム & 買い物リストカード
+   ========================================== */
 .input-form {
   display: flex;
   gap: 6px;

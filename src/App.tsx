@@ -18,6 +18,11 @@ interface SavedList {
 const DEFAULT_CATEGORIES = ['スーパー', 'ドラッグストア', '本屋'];
 
 export default function App() {
+  // 画面切り替え: 'home'（トップページ：リスト選択画面） | 'editor'（お買い物メモ編集画面）
+  const [screen, setScreen] = useState<'home' | 'editor'>('home');
+  const [activeListTitle, setActiveListTitle] = useState<string>('現在のお買い物メモ');
+  const [activeListId, setActiveListId] = useState<number | null>(null);
+
   const [inputText, setInputText] = useState<string>('');
 
   const [categories, setCategories] = useState<string[]>(() => {
@@ -48,14 +53,13 @@ export default function App() {
       : [{ id: 4, text: '食パン', category: 'スーパー' }];
   });
 
-  // 保存済みリスト一覧用のState
   const [savedLists, setSavedLists] = useState<SavedList[]>(() => {
     const saved = localStorage.getItem('savedShoppingLists_v1');
     return saved ? JSON.parse(saved) : [];
   });
+
   const [isSaveModalOpen, setIsSaveModalOpen] = useState<boolean>(false);
   const [saveTitleInput, setSaveTitleInput] = useState<string>('');
-  const [isSavedListsOpen, setIsSavedListsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     localStorage.setItem('shopCategories_v1', JSON.stringify(categories));
@@ -72,6 +76,67 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('savedShoppingLists_v1', JSON.stringify(savedLists));
   }, [savedLists]);
+
+  // --- トップページからの画面遷移 ---
+
+  // 1. 現在編集中のリストを開く
+  const handleOpenCurrentDraft = () => {
+    setCurrentView('すべて');
+    setScreen('editor');
+  };
+
+  // 2. 新しいリストを作成する
+  const handleCreateNewList = () => {
+    const hasCurrentItems = toBuyList.length > 0 || boughtList.length > 0;
+    if (
+      hasCurrentItems &&
+      activeListId === null &&
+      !window.confirm(
+        '現在作成中のリストがクリアされます。新しいリストを作成しますか？'
+      )
+    ) {
+      return;
+    }
+    setToBuyList([]);
+    setBoughtList([]);
+    setActiveListId(null);
+    setActiveListTitle('新しいお買い物リスト');
+    setCurrentView('すべて');
+    setScreen('editor');
+  };
+
+  // 3. 保存済みリストを選択して開く
+  const handleOpenSavedList = (saved: SavedList) => {
+    const timestamp = Date.now();
+    const clonedToBuy = saved.toBuyItems.map((item, idx) => ({
+      ...item,
+      id: timestamp + idx,
+    }));
+    const clonedBought = saved.boughtItems.map((item, idx) => ({
+      ...item,
+      id: timestamp + 10000 + idx,
+    }));
+
+    setToBuyList(clonedToBuy);
+    setBoughtList(clonedBought);
+    setActiveListId(saved.id);
+    setActiveListTitle(saved.title);
+    setCurrentView('すべて');
+    setScreen('editor');
+  };
+
+  // 保存済みリストの削除
+  const handleDeleteSavedList = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!window.confirm('この保存済みリストを削除しますか？')) return;
+    setSavedLists(savedLists.filter((list) => list.id !== id));
+    if (activeListId === id) {
+      setActiveListId(null);
+      setActiveListTitle('現在のお買い物メモ');
+    }
+  };
+
+  // --- リスト編集画面の操作 ---
 
   const handleSelectView = (view: string) => {
     setCurrentView(view);
@@ -147,16 +212,21 @@ export default function App() {
     }
   };
 
-  // リストの保存処理
+  // 保存モーダルを開く
   const openSaveModal = () => {
-    const now = new Date();
-    const defaultTitle = `${now.getMonth() + 1}/${now.getDate()}のお買い物${
-      currentView !== 'すべて' ? `（${currentView}）` : ''
-    }`;
-    setSaveTitleInput(defaultTitle);
+    if (activeListId !== null && activeListTitle) {
+      setSaveTitleInput(activeListTitle);
+    } else {
+      const now = new Date();
+      const defaultTitle = `${now.getMonth() + 1}/${now.getDate()}のお買い物${
+        currentView !== 'すべて' ? `（${currentView}）` : ''
+      }`;
+      setSaveTitleInput(defaultTitle);
+    }
     setIsSaveModalOpen(true);
   };
 
+  // リストの保存実行（新規保存 or 上書き保存）
   const handleSaveCurrentList = (e: React.FormEvent) => {
     e.preventDefault();
     const title = saveTitleInput.trim() || '無題のリスト';
@@ -183,54 +253,39 @@ export default function App() {
       now.getHours()
     ).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-    const newSavedList: SavedList = {
-      id: Date.now(),
-      title,
-      createdAt: formattedDate,
-      toBuyItems: targetToBuy,
-      boughtItems: targetBought,
-    };
-
-    setSavedLists([newSavedList, ...savedLists]);
-    setIsSaveModalOpen(false);
-    setSaveTitleInput('');
-  };
-
-  // 保存済みリストの復元（読み込み）
-  const handleLoadSavedList = (saved: SavedList, mode: 'replace' | 'append') => {
-    const timestamp = Date.now();
-    const clonedToBuy = saved.toBuyItems.map((item, idx) => ({
-      ...item,
-      id: timestamp + idx,
-    }));
-    const clonedBought = saved.boughtItems.map((item, idx) => ({
-      ...item,
-      id: timestamp + 10000 + idx,
-    }));
-
-    if (mode === 'replace') {
-      if (
-        (toBuyList.length > 0 || boughtList.length > 0) &&
-        !window.confirm(
-          '現在のリストを上書きして、保存したリストを読み込みますか？'
-        )
-      ) {
-        return;
-      }
-      setToBuyList(clonedToBuy);
-      setBoughtList(clonedBought);
+    if (activeListId !== null && currentView === 'すべて') {
+      // 既存の保存リストを上書き更新
+      const updatedLists = savedLists.map((list) =>
+        list.id === activeListId
+          ? {
+              ...list,
+              title,
+              createdAt: `${formattedDate} 更新`,
+              toBuyItems: targetToBuy,
+              boughtItems: targetBought,
+            }
+          : list
+      );
+      setSavedLists(updatedLists);
+      setActiveListTitle(title);
     } else {
-      setToBuyList([...clonedToBuy, ...toBuyList]);
-      setBoughtList([...clonedBought, ...boughtList]);
+      // 新しく保存リストに追加
+      const newId = Date.now();
+      const newSavedList: SavedList = {
+        id: newId,
+        title,
+        createdAt: formattedDate,
+        toBuyItems: targetToBuy,
+        boughtItems: targetBought,
+      };
+      setSavedLists([newSavedList, ...savedLists]);
+      if (currentView === 'すべて') {
+        setActiveListId(newId);
+        setActiveListTitle(title);
+      }
     }
 
-    setCurrentView('すべて');
-    setIsSavedListsOpen(false);
-  };
-
-  const handleDeleteSavedList = (id: number) => {
-    if (!window.confirm('この保存済みリストを削除しますか？')) return;
-    setSavedLists(savedLists.filter((list) => list.id !== id));
+    setIsSaveModalOpen(false);
   };
 
   const displayedToBuy =
@@ -248,13 +303,152 @@ export default function App() {
     return toBuyList.filter((item) => item.category === view).length;
   };
 
+  // ==========================================
+  // 1. トップページ（リスト選択画面）
+  // ==========================================
+  if (screen === 'home') {
+    return (
+      <div className="app-wrapper">
+        <div className="app-container">
+          <header className="home-header">
+            <h1>お買い物メモ</h1>
+            <p className="home-subtitle">表示するリストを選択してください</p>
+          </header>
+
+          <main className="home-main">
+            {/* 新規作成ボタン */}
+            <button
+              type="button"
+              className="new-list-hero-btn"
+              onClick={handleCreateNewList}
+            >
+              <span className="plus-icon">＋</span>
+              <span>新しいお買い物リストを作る</span>
+            </button>
+
+            {/* 作業中のメモセクション */}
+            <section className="home-section">
+              <h2 className="home-section-title">作成中のメモ</h2>
+              <div
+                className="select-list-card current-draft-card"
+                onClick={handleOpenCurrentDraft}
+              >
+                <div className="select-card-top">
+                  <div className="select-card-title-row">
+                    <span className="status-pill draft-pill">編集中</span>
+                    <h3 className="select-card-title">{activeListTitle}</h3>
+                  </div>
+                  <span className="open-arrow">開く ＞</span>
+                </div>
+                <div className="select-card-meta">
+                  <span>買うもの: {toBuyList.length}件</span>
+                  <span>／</span>
+                  <span>買ったもの: {boughtList.length}件</span>
+                </div>
+                {toBuyList.length > 0 && (
+                  <p className="select-card-preview">
+                    {toBuyList
+                      .slice(0, 5)
+                      .map((i) => i.text)
+                      .join('、')}
+                    {toBuyList.length > 5 ? ' ...' : ''}
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {/* 保存済みリスト一覧セクション */}
+            <section className="home-section">
+              <div className="home-section-header">
+                <h2 className="home-section-title">保存したリスト</h2>
+                <span className="badge">{savedLists.length}件</span>
+              </div>
+
+              {savedLists.length === 0 ? (
+                <div className="list-card">
+                  <p className="empty-message">
+                    保存されたリストはまだありません。
+                    <br />
+                    リスト画面右上の「保存」ボタンから登録できます。
+                  </p>
+                </div>
+              ) : (
+                <ul className="saved-select-list">
+                  {savedLists.map((saved) => (
+                    <li
+                      key={saved.id}
+                      className="select-list-card"
+                      onClick={() => handleOpenSavedList(saved)}
+                    >
+                      <div className="select-card-top">
+                        <div>
+                          <h3 className="select-card-title">{saved.title}</h3>
+                          <span className="select-card-date">
+                            {saved.createdAt}
+                          </span>
+                        </div>
+                        <div className="select-card-right">
+                          <button
+                            type="button"
+                            className="delete-btn"
+                            onClick={(e) => handleDeleteSavedList(saved.id, e)}
+                          >
+                            削除
+                          </button>
+                          <span className="open-arrow">開く ＞</span>
+                        </div>
+                      </div>
+
+                      <div className="select-card-meta">
+                        <span>買うもの: {saved.toBuyItems.length}件</span>
+                        <span>／</span>
+                        <span>買ったもの: {saved.boughtItems.length}件</span>
+                      </div>
+
+                      {(saved.toBuyItems.length > 0 ||
+                        saved.boughtItems.length > 0) && (
+                        <p className="select-card-preview">
+                          {[...saved.toBuyItems, ...saved.boughtItems]
+                            .slice(0, 6)
+                            .map((i) => i.text)
+                            .join('、')}
+                          {saved.toBuyItems.length + saved.boughtItems.length >
+                          6
+                            ? ' ...'
+                            : ''}
+                        </p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // 2. お買い物メモ編集画面
+  // ==========================================
   return (
     <div className="app-wrapper">
       <div className="app-container">
         <header className="app-header">
-          <div className="header-title-area">
-            <h1>お買い物メモ</h1>
-            <span className="current-view-tag">{currentView}</span>
+          <div className="header-left-group">
+            <button
+              type="button"
+              className="back-home-btn"
+              onClick={() => setScreen('home')}
+              aria-label="リスト選択へ戻る"
+            >
+              ＜ 一覧へ
+            </button>
+            <div className="header-title-area">
+              <h1>{activeListTitle}</h1>
+              <span className="current-view-tag">{currentView}</span>
+            </div>
           </div>
 
           <div className="header-actions">
@@ -262,26 +456,14 @@ export default function App() {
               type="button"
               className="header-action-btn save-btn"
               onClick={openSaveModal}
-              title="現在のリストを保存"
             >
               保存
             </button>
             <button
               type="button"
-              className="header-action-btn saved-list-btn"
-              onClick={() => setIsSavedListsOpen(true)}
-              title="保存したリスト一覧を見る"
-            >
-              一覧
-              {savedLists.length > 0 && (
-                <span className="header-badge">{savedLists.length}</span>
-              )}
-            </button>
-            <button
-              type="button"
               className="hamburger-btn"
               onClick={() => setIsMenuOpen(true)}
-              aria-label="メニューを開く"
+              aria-label="お店切り替えメニューを開く"
             >
               <span className="hamburger-line"></span>
               <span className="hamburger-line"></span>
@@ -418,100 +600,6 @@ export default function App() {
                   </button>
                 </div>
               </form>
-            </div>
-          </div>
-        )}
-
-        {/* 保存済みリスト一覧モーダル */}
-        {isSavedListsOpen && (
-          <div
-            className="modal-overlay"
-            onClick={() => setIsSavedListsOpen(false)}
-          >
-            <div
-              className="modal-card saved-lists-modal"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="modal-header">
-                <h2>保存したリスト一覧</h2>
-                <button
-                  type="button"
-                  className="close-menu-btn"
-                  onClick={() => setIsSavedListsOpen(false)}
-                >
-                  閉じる
-                </button>
-              </div>
-
-              {savedLists.length === 0 ? (
-                <p className="empty-message">
-                  保存されたリストはまだありません。
-                  <br />
-                  右上の「保存」ボタンから現在のリストを保存できます。
-                </p>
-              ) : (
-                <ul className="saved-list-items">
-                  {savedLists.map((saved) => (
-                    <li key={saved.id} className="saved-list-card">
-                      <div className="saved-list-top">
-                        <div>
-                          <h3 className="saved-list-title">{saved.title}</h3>
-                          <span className="saved-list-date">
-                            {saved.createdAt}
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          className="delete-btn"
-                          onClick={() => handleDeleteSavedList(saved.id)}
-                        >
-                          削除
-                        </button>
-                      </div>
-
-                      <div className="saved-list-preview">
-                        {saved.toBuyItems.length > 0 && (
-                          <div className="preview-group">
-                            <span className="preview-label">
-                              買うもの ({saved.toBuyItems.length}件):
-                            </span>
-                            <span className="preview-items">
-                              {saved.toBuyItems.map((i) => i.text).join('、')}
-                            </span>
-                          </div>
-                        )}
-                        {saved.boughtItems.length > 0 && (
-                          <div className="preview-group bought-preview">
-                            <span className="preview-label">
-                              買ったもの ({saved.boughtItems.length}件):
-                            </span>
-                            <span className="preview-items">
-                              {saved.boughtItems.map((i) => i.text).join('、')}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="saved-list-actions">
-                        <button
-                          type="button"
-                          className="load-append-btn"
-                          onClick={() => handleLoadSavedList(saved, 'append')}
-                        >
-                          今のリストに追加
-                        </button>
-                        <button
-                          type="button"
-                          className="load-replace-btn"
-                          onClick={() => handleLoadSavedList(saved, 'replace')}
-                        >
-                          このリストを開く
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
           </div>
         )}
