@@ -378,14 +378,16 @@ export default function App() {
             )}
 
             {/* 保存済みリスト一覧セクション */}
-            <section className="home-section">
+            <section className="home-section saved-section-panel">
               <div className="home-section-header">
-                <h2 className="home-section-title">保存したリスト</h2>
-                <span className="badge">{savedLists.length}件</span>
+                <h2 className="home-section-title saved-section-title">
+                  保存したリスト
+                </h2>
+                <span className="badge saved-badge">{savedLists.length}件</span>
               </div>
 
               {savedLists.length === 0 ? (
-                <div className="list-card">
+                <div className="list-card saved-empty-card">
                   <p className="empty-message">
                     保存されたリストはまだありません。
                     <br />
@@ -397,12 +399,14 @@ export default function App() {
                   {savedLists.map((saved) => (
                     <li
                       key={saved.id}
-                      className="select-list-card"
+                      className="select-list-card saved-list-card-purple-pink"
                       onClick={() => handleOpenSavedList(saved)}
                     >
                       <div className="select-card-top">
                         <div>
-                          <h3 className="select-card-title">{saved.title}</h3>
+                          <h3 className="select-card-title saved-card-title">
+                            {saved.title}
+                          </h3>
                           <span className="select-card-date">
                             {saved.createdAt}
                           </span>
@@ -410,24 +414,30 @@ export default function App() {
                         <div className="select-card-right">
                           <button
                             type="button"
-                            className="delete-btn"
+                            className="delete-btn saved-delete-btn"
                             onClick={(e) => handleDeleteSavedList(saved.id, e)}
                           >
                             削除
                           </button>
-                          <span className="open-arrow">開く ＞</span>
+                          <span className="open-arrow saved-open-arrow">
+                            開く ＞
+                          </span>
                         </div>
                       </div>
 
-                      <div className="select-card-meta">
-                        <span>買うもの: {saved.toBuyItems.length}件</span>
-                        <span>／</span>
-                        <span>買ったもの: {saved.boughtItems.length}件</span>
+                      <div className="select-card-meta saved-card-meta">
+                        <span className="meta-chip">
+                          買うもの: {saved.toBuyItems.length}件
+                        </span>
+                        <span className="meta-divider">／</span>
+                        <span className="meta-chip">
+                          買ったもの: {saved.boughtItems.length}件
+                        </span>
                       </div>
 
                       {(saved.toBuyItems.length > 0 ||
                         saved.boughtItems.length > 0) && (
-                        <p className="select-card-preview">
+                        <p className="select-card-preview saved-card-preview">
                           {[...saved.toBuyItems, ...saved.boughtItems]
                             .slice(0, 6)
                             .map((i) => i.text)

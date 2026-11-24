@@ -102,6 +102,29 @@ body {
   padding-left: 4px;
 }
 
+.saved-section-panel {
+  background-color: #fdf6ff;
+  border: 1.5px solid #e6c6f5;
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(155, 77, 175, 0.08);
+}
+
+.saved-section-title {
+  color: #9c3cb8;
+}
+
+.saved-badge {
+  background-color: #f0d4fa;
+  color: #8e2da8;
+  border: 1px solid #ddb0ee;
+}
+
+.saved-empty-card {
+  background-color: #ffffff;
+  border: 1px solid #ead0f7;
+}
+
 .saved-select-list {
   list-style: none;
   display: flex;
@@ -117,9 +140,9 @@ body {
   box-shadow: 0 4px 12px rgba(214, 90, 136, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 9px;
   cursor: pointer;
-  transition: transform 0.1s, border-color 0.15s;
+  transition: transform 0.1s, border-color 0.15s, box-shadow 0.15s;
 }
 
 .select-list-card:active {
@@ -130,6 +153,24 @@ body {
 .current-draft-card {
   border: 2px solid #f8bbd0;
   background-color: #fffafd;
+}
+
+/* 保存したリストカード（紫よりのピンク＋高コントラスト視認性） */
+.saved-list-card-purple-pink {
+  background-color: #ffffff;
+  border: 1.5px solid #e3b8f2;
+  border-left: 5px solid #b553c9;
+  box-shadow: 0 4px 14px rgba(156, 60, 184, 0.09);
+}
+
+.saved-list-card-purple-pink:hover {
+  border-color: #c86ee0;
+  box-shadow: 0 6px 18px rgba(156, 60, 184, 0.14);
+}
+
+.saved-list-card-purple-pink:active {
+  transform: scale(0.99);
+  background-color: #fcf4ff;
 }
 
 .select-card-top {
@@ -159,22 +200,42 @@ body {
 }
 
 .select-card-title {
-  font-size: 1.05rem;
+  font-size: 1.06rem;
   font-weight: 700;
-  color: #4a3b42;
+  color: #3d2c42;
   word-break: break-word;
+  line-height: 1.35;
+}
+
+.saved-card-title {
+  color: #4a2357;
 }
 
 .select-card-date {
+  display: inline-block;
+  margin-top: 2px;
   font-size: 0.78rem;
-  color: #9e8a92;
+  font-weight: 500;
+  color: #7c6485;
 }
 
 .select-card-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
+}
+
+.saved-delete-btn {
+  background-color: #fdf6ff;
+  border: 1px solid #d7b2e6;
+  color: #7a4b8a;
+  font-weight: 600;
+}
+
+.saved-delete-btn:active {
+  background-color: #f3dcfb;
+  color: #552366;
 }
 
 .open-arrow {
@@ -184,23 +245,55 @@ body {
   white-space: nowrap;
 }
 
+.saved-open-arrow {
+  background-color: #f6e1fd;
+  color: #8b28a8;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+
 .select-card-meta {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 0.84rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #d65a88;
 }
 
+.saved-card-meta {
+  color: #8e2da8;
+  flex-wrap: wrap;
+}
+
+.meta-chip {
+  background-color: #f7e4fc;
+  color: #7d2296;
+  padding: 3px 9px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.meta-divider {
+  color: #b78ec7;
+  font-weight: 400;
+}
+
 .select-card-preview {
-  font-size: 0.84rem;
+  font-size: 0.85rem;
   color: #7d6871;
   background-color: #fff5f8;
-  padding: 8px 12px;
+  padding: 9px 12px;
   border-radius: 10px;
-  line-height: 1.45;
+  line-height: 1.5;
   word-break: break-word;
+}
+
+.saved-card-preview {
+  background-color: #faf0fd;
+  border: 1px solid #edd4f7;
+  color: #36223d;
+  font-weight: 500;
 }
 
 /* ==========================================
